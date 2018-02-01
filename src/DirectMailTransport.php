@@ -1,25 +1,29 @@
 <?php
 
+/*
+ * This file is part of ibrand/laravel-aliyun-mail.
+ *
+ * (c) iBrand <https://www.ibrand.cc>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace iBrand\AliyunMail;
 
-
 use ClientException;
+use Dm\Request\V20151123 as Dm;
 use Illuminate\Mail\Transport\Transport;
 use ServerException;
 use Swift_Mime_SimpleMessage;
-use Dm\Request\V20151123 as Dm;
 
-require_once __DIR__ . "/../libs/aliyun-php-sdk-core/Config.php";
-
+require_once __DIR__.'/../libs/aliyun-php-sdk-core/Config.php';
 
 /**
- * Class DirectMailTransport
- * @package iBrand\AliyunMail
- * aliyun mail document: https://help.aliyun.com/document_detail/29460.html?spm=5176.doc29435.6.583.WtXus4
+ * Class DirectMailTransport.
  */
 class DirectMailTransport extends Transport
 {
-
     protected $region;
     protected $accessKey;
     protected $accessSecret;
@@ -41,8 +45,8 @@ class DirectMailTransport extends Transport
      * Recipient/sender data will be retrieved from the Message API.
      * The return value is the number of recipients who were accepted for delivery.
      *
-     * @param Swift_Mime_SimpleMessage $message
-     * @param string[] $failedRecipients An array of failures by-reference
+     * @param Swift_Mime_Message $message
+     * @param string[]           $failedRecipients An array of failures by-reference
      *
      * @return int
      */
@@ -65,9 +69,9 @@ class DirectMailTransport extends Transport
         try {
             return $client->getAcsResponse($request);
         } catch (ClientException  $e) {
-            \Log::info($e->getErrorCode() . ':' . $e->getErrorMessage());
+            \Log::info($e->getErrorCode().':'.$e->getErrorMessage());
         } catch (ServerException  $e) {
-            \Log::info($e->getErrorCode() . ':' . $e->getErrorMessage());
+            \Log::info($e->getErrorCode().':'.$e->getErrorMessage());
         }
 
         return false;
@@ -75,8 +79,8 @@ class DirectMailTransport extends Transport
 
     /**
      * @param Swift_Mime_SimpleMessage $message
-     * @return string
-     * 目标地址，多个 email 地址可以用逗号分隔，最多100个地址, document: https://help.aliyun.com/document_detail/29444.html?spm=5176.doc29435.2.3.XKDMXA
+     *
+     * @return string 目标地址，多个 email 地址可以用逗号分隔，最多100个地址, document: https://help.aliyun.com/document_detail/29444.html?spm=5176.doc29435.2.3.XKDMXA
      */
     protected function getToAddress(\Swift_Mime_SimpleMessage $message)
     {
